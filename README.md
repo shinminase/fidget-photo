@@ -18,7 +18,8 @@ a simple rotatable and draggable photo modal made using javascript and html/css
 ## html
 ```html
 <!-- put ur photo here -->
-<img id="myPhoto" class="draggable" src="https://i.pinimg.com/564x/c9/1e/49/c91e4922fa4f69a623c9bf56d06f8783.jpg" alt="photo" style="width:100%;max-width:300px">
+<img id="myPhoto" class="draggable" src="path-to-image" alt="photo" style="width:100%;max-width:300px">
+ <!-- replace "path-to-image" with link and alt text to whatever you wish. -->
  <!-- adjust as wanted. remove "style="width:100%;max-width:300px" if u want original image resolution-->
 ```
 ## javascript 
@@ -62,3 +63,69 @@ a simple rotatable and draggable photo modal made using javascript and html/css
     img.style.transform = "rotate(" + angle + "deg)";
   };
 ```
+### full webpage example
+```html
+<!DOCTYPE html>
+<title>fidget-modal</title>
+<head>
+<style>
+  .draggable {
+    position: absolute;
+    cursor: grab;
+  }
+
+  .draggable:active {
+    cursor: grabbing;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- put ur photo here -->
+<img id="myPhoto" class="draggable" src="https://i.pinimg.com/564x/c9/1e/49/c91e4922fa4f69a623c9bf56d06f8783.jpg" alt="Your Photo" style="width:100%;max-width:300px">
+
+
+<!-- javascript -->
+<script>
+  var img = document.getElementById("myPhoto");
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+  // when the user clicks and holds the image it should drag
+  img.onmousedown = dragMouseDown;
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    img.style.top = (img.offsetTop - pos2) + "px";
+    img.style.left = (img.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+
+  // make the image rotatable via mouse wheel
+  var angle = 0;
+  img.onwheel = function(e) {
+    e.preventDefault();
+    angle += e.deltaY * 0.1;
+    img.style.transform = "rotate(" + angle + "deg)";
+  };
+</script>
+</body>
+</html>
